@@ -1,0 +1,30 @@
+body{
+    background-color: white;
+}
+nav{
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-family:'Monaco', monospace;
+}
+hr{
+    border: 1px solid rgba(0,0,0,0.08);
+}
+a{
+    font-size: 15px;
+    text-decoration: none;
+    padding: 10px;
+    color: black;
+}
+
+.PosterImg{
+    display: flex;
+    justify-self: center;
+    max-width: 70%;
+}
+.Poster h1{
+    color: rgb(82, 82, 82);
+    font-family:fantasy;
+    margin-top: -150px;
+    margin-left: 20%;
+}
