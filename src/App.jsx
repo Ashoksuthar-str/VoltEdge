@@ -1,30 +1,15 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./css/Home.css";
-import Poster from "./assets/Poster.png";
+import Home from "./pages/Home";
+
 function App() {
   return (
     <>
-      {/* Navber */}
-
-      <div className="navbar">
-        <nav>
-          <div className="logo">
-            <img src="" />
-            <h3>VoltEdge</h3>
-          </div>
-          <div className="links">
-            <a href="#">Home</a>
-            <a href="#">Product</a>
-            <a href="#">Manual</a>
-            <a href="#">Tutorial</a>
-            <a href="#">Account</a>
-          </div>
-        </nav>
-      </div>
-      <hr />
-      <div className="Poster">
-        <img className="PosterImg" src={Poster} />
-        <h1>Unleash your inner Engineer</h1>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
