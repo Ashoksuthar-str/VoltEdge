@@ -1,9 +1,21 @@
-import React from "react";
 import logo from "../assets/Images/Logo.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { signInWithGoogle } from "../Auth-DB/FireBase";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate = useNavigate();
+
   const [signIn, setSignIn] = useState(false);
+
+  useEffect(() => {
+    const tryEmail = localStorage.getItem("email"); // or whatever key you are using
+    if (tryEmail) {
+      if (tryEmail) {
+        setSignIn(true);
+      }
+    }
+  });
 
   const allLinks = [
     {
@@ -43,16 +55,19 @@ function Header() {
           ))}
         </div>
         {signIn == true ? (
-          <div className="w-[30px] h-[30px] bg-red-400 self-center mr-[20px] lg:mr-[50px] rounded-full">
-            <h1 className="pl-[11px]">P</h1>
+          <div
+            onClick={() => navigate("/account")}
+            className="w-[30px] h-[30px] bg-red-400 self-center mr-[20px] lg:mr-[50px] rounded-full overflow-hidden"
+          >
+            <img src={localStorage.getItem("profilePic")} />
           </div>
         ) : (
-          <a
-            className="my-auto p-2 mr-[30px] text-white bg-gray-700 border-1 rounded-[13px]  hover:text-blue-500"
-            href=""
+          <button
+            onClick={signInWithGoogle}
+            className="bg-[rgba(255,255,255,0.7)] self-center rounded-[7px] border-[rgba(0,0,0,0.5)] border-[2px] mr-[25px] w-18 h-8"
           >
             SignIn
-          </a>
+          </button>
         )}
       </div>
       <hr className="border-gray-500 border-1 w-[90%] mx-auto lg:w-[98%]" />
