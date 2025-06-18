@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC5ONwvN_jDPowDGmKEnZk0INu0uV_Hw-w",
+  apiKey: `${import.meta.env.VITE_GOOGLE_AUTH_API}`,
   authDomain: "voltedge-auth.firebaseapp.com",
   projectId: "voltedge-auth",
   storageBucket: "voltedge-auth.firebasestorage.app",
