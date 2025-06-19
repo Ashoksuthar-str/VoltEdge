@@ -1,13 +1,14 @@
 import logo from "../assets/Images/Logo.png";
 import { useState, useEffect } from "react";
 import { signInWithGoogle } from "../Auth-DB/FireBase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 function Header() {
   const navigate = useNavigate();
 
   const [signIn, setSignIn] = useState(false);
-
+  const [selected, setSelected] = useState("Home");
+  const location = useLocation();
   useEffect(() => {
     const tryEmail = localStorage.getItem("email"); // or whatever key you are using
     if (tryEmail) {
@@ -17,27 +18,32 @@ function Header() {
     }
   });
 
+  const HandleAccount = () => {
+    navigate("/account");
+    setSelected("Account");
+  };
+
   const allLinks = [
     {
       name: "Home",
-      myLink: "#",
+      myLink: "/",
     },
     {
       name: "Product",
-      myLink: "#",
+      myLink: "/product",
     },
     {
       name: "Manual",
-      myLink: "#",
+      myLink: "/manual",
     },
     {
       name: "Tutorial",
-      myLink: "#",
+      myLink: "/tutorial",
     },
   ];
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between lg:w-[80%] mx-auto">
         <div className="self-center">
           <img
             src={logo}
@@ -46,18 +52,22 @@ function Header() {
         </div>
         <div className="text-white font-medium self-center flex">
           {allLinks.map((item) => (
-            <a
-              className="px-[7px] lg:px-[30px] hover:text-blue-500"
-              href={item.myLink}
+            <Link
+              key={item.name}
+              to={item.myLink}
+              className={`px-[7px] lg:px-[30px] hover:text-blue-500 rounded-[4px] ${
+                location.pathname === item.myLink &&
+                "bg-[rgba(255,255,255,0.6)] border-1"
+              }`}
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
         {signIn == true ? (
           <div
-            onClick={() => navigate("/account")}
-            className="w-[30px] h-[30px] bg-red-400 self-center mr-[20px] lg:mr-[50px] rounded-full overflow-hidden"
+            onClick={HandleAccount}
+            className="w-[30px] h-[30px] bg-red-400 self-center mr-[20px] lg:mr-[50px] rounded-full overflow-hidden "
           >
             <img src={localStorage.getItem("profilePic")} />
           </div>
