@@ -5,6 +5,7 @@ function Account() {
   const HandleLogOut = () => {
     localStorage.removeItem("email");
     localStorage.removeItem("profilePic");
+    localStorage.removeItem("uid");
   };
 
   return (

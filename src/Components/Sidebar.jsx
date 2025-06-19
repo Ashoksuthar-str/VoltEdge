@@ -8,11 +8,12 @@ function Sidebar() {
   const HandleLogOut = () => {
     localStorage.removeItem("email");
     localStorage.removeItem("profilePic");
+    localStorage.removeItem("uid");
     window.location.reload();
   };
 
   useEffect(() => {
-    const tryEmail = localStorage.getItem("email"); // or whatever key you are using
+    const tryEmail = localStorage.getItem("uid"); // or whatever key you are using
     if (tryEmail) {
       if (tryEmail) {
         setSignIn(true);
@@ -82,7 +83,7 @@ function Sidebar() {
       ) : (
         <div className="flex flex-col items-center p-20 gap-4">
           <a
-            className="font-bold rounded-[10px]  w-[250px] py-[15px]  hover:bg-[rgba(255,100,100,0.3)]"
+            className="font-bold rounded-[10px] w-[250px] py-[15px]  hover:bg-[rgba(100,255,100,0.3)]"
             href="#"
             onClick={signInWithGoogle}
           >

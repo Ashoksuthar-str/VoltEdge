@@ -10,13 +10,13 @@ function Header() {
   const [selected, setSelected] = useState("Home");
   const location = useLocation();
   useEffect(() => {
-    const tryEmail = localStorage.getItem("email"); // or whatever key you are using
+    const tryEmail = localStorage.getItem("uid"); // or whatever key you are using
     if (tryEmail) {
       if (tryEmail) {
         setSignIn(true);
       }
     }
-  });
+  }, []);
 
   const HandleAccount = () => {
     navigate("/account");
