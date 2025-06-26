@@ -50,14 +50,14 @@ function Header() {
             className="w-[50px] lg:w-[60px] pl-[10px] object-cover"
           />
         </div>
-        <div className="text-white font-medium self-center flex">
+        <div className="text-black font-medium self-center flex">
           {allLinks.map((item) => (
             <Link
               key={item.name}
               to={item.myLink}
               className={`px-[7px] lg:px-[30px] hover:text-blue-500 rounded-[4px] ${
                 location.pathname === item.myLink &&
-                "bg-[rgba(255,255,255,0.6)] border-1"
+                "bg-[rgba(150,150,255,0.6)] border-1"
               }`}
             >
               {item.name}

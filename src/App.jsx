@@ -6,6 +6,7 @@ import Product from "./Pages/Product";
 import Manual from "./Pages/Manual";
 import Tutorial from "./Pages/Tutorial";
 import ProductDetail from "./Pages/ProductDetail";
+import UploadPro from "./Pages/UploadPro";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/tutorial" element={<Tutorial />} />
           <Route path="/account" element={<Account />} />
           <Route path="/detail/:id" element={<ProductDetail />} />
+          <Route path="/uploadpro" element={<UploadPro />} />
         </Routes>
       </BrowserRouter>
     </>
