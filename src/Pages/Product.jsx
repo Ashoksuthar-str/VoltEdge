@@ -2,41 +2,35 @@ import React, { useEffect, useState } from "react";
 import { db } from "../Auth-DB/FireBase";
 import Header from "../Components/Header";
 import { getDocs, collection } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+
 function Product() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
 
   const productsRef = collection(db, "Products");
 
   useEffect(() => {
-    const data = localStorage.getItem("products");
-    const savedTime = localStorage.getItem("products_timestamp");
-    const isOld = Date.now() - savedTime > 3600000;
-    if (data && isOld == false) {
-      setProducts(JSON.parse(data));
-    } else {
-      const getProduct = async () => {
-        try {
-          const data = await getDocs(productsRef);
-          const filteredData = data.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }));
-          localStorage.setItem("products", JSON.stringify(filteredData));
-          localStorage.setItem("products_timestamp", Date.now());
-          setProducts(filteredData);
-          console.log(filteredData);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      getProduct();
-    }
+    const getProduct = async () => {
+      try {
+        const data = await getDocs(productsRef);
+        const filteredData = data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setProducts(filteredData);
+        console.log(filteredData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getProduct();
   }, []);
 
   return (
     <div>
       <Header />
-      <div>
+      <div className="w-[90%] mx-auto">
         <h1>Beginner Pack</h1>
         <div className="flex overflow-x-scroll scrollbar-hide">
           {products
@@ -44,7 +38,8 @@ function Product() {
             .map((item) => (
               <div
                 key={item.id}
-                className="bg-white min-w-[300px] max-w-[300px] m-10 rounded-md"
+                className="bg-white min-w-[300px] max-w-[300px] m-10 rounded-md cursor-pointer shadow-[-7px_-7px_20px_rgba(0,0,0,0.6),_7px_7px_20px_rgba(255,255,255,0.3)]"
+                onClick={() => navigate(`/detail/${item.code}`)}
               >
                 <img className="overflow-hidden w-[300px]" src={item.img} />
                 <hr />

@@ -5,6 +5,7 @@ import Account from "./Pages/Account";
 import Product from "./Pages/Product";
 import Manual from "./Pages/Manual";
 import Tutorial from "./Pages/Tutorial";
+import ProductDetail from "./Pages/ProductDetail";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/manual" element={<Manual />} />
           <Route path="/tutorial" element={<Tutorial />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/detail/:id" element={<ProductDetail />} />
         </Routes>
       </BrowserRouter>
     </>
