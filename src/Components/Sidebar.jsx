@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { signInWithGoogle } from "../Auth-DB/FireBase";
 
-function Sidebar() {
+function Sidebar({ setCurrPage }) {
   const [signIn, setSignIn] = useState(false);
   const [selected, setSelected] = useState("Profile");
 
@@ -21,6 +21,11 @@ function Sidebar() {
     }
   });
 
+  const handleTabselection = (e) => {
+    setSelected(e);
+    setCurrPage(e);
+  };
+
   return (
     <div className="bg-white w-[300px] rounded-[10px]">
       <div className="flex justify-center py-10">
@@ -35,18 +40,18 @@ function Sidebar() {
         <div className="flex flex-col items-center p-10 gap-4">
           <a
             className={`font-bold rounded-[10px]  w-[250px] py-[15px]  hover:bg-[rgba(0,0,0,0.1)] ${
-              selected == "Profile" && "bg-[rgba(100,100,255,0.3)]"
+              selected == "profile" && "bg-[rgba(100,100,255,0.3)]"
             }`}
-            onClick={() => setSelected("Profile")}
+            onClick={() => handleTabselection("profile")}
             href="#"
           >
             👤Profile
           </a>
           <a
-            className={`font-bold rounded-[10px]  w-[250px] py-[15px]  hover:bg-[rgba(0,0,0,0.1)] ${
-              selected == "Address" && "bg-[rgba(100,100,255,0.3)]"
+            className={`font-bold rounded-[10px]  w-[250px] py-[15px] hover:bg-[rgba(0,0,0,0.1)] ${
+              selected == "address" && "bg-[rgba(100,100,255,0.3)]"
             }`}
-            onClick={() => setSelected("Address")}
+            onClick={() => handleTabselection("address")}
             href="#"
           >
             🗺️Address
@@ -54,9 +59,9 @@ function Sidebar() {
 
           <a
             className={`font-bold rounded-[10px]  w-[250px] py-[15px]  hover:bg-[rgba(0,0,0,0.1)] ${
-              selected == "Orders" && "bg-[rgba(100,100,255,0.3)]"
+              selected == "order" && "bg-[rgba(100,100,255,0.3)]"
             }`}
-            onClick={() => setSelected("Orders")}
+            onClick={() => handleTabselection("order")}
             href="#"
           >
             📦Orders
@@ -64,9 +69,9 @@ function Sidebar() {
 
           <a
             className={`font-bold rounded-[10px]  w-[250px] py-[15px]  hover:bg-[rgba(0,0,0,0.2)] ${
-              selected == "Setting" && "bg-[rgba(100,100,255,0.3)]"
+              selected == "setting" && "bg-[rgba(100,100,255,0.3)]"
             }`}
-            onClick={() => setSelected("Setting")}
+            onClick={() => handleTabselection("setting")}
             href="#"
           >
             ⚙️Setting
