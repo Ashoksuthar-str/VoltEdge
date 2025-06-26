@@ -3,7 +3,7 @@ import { signInWithGoogle } from "../Auth-DB/FireBase";
 
 function Sidebar({ setCurrPage }) {
   const [signIn, setSignIn] = useState(false);
-  const [selected, setSelected] = useState("Profile");
+  const [selected, setSelected] = useState("profile");
 
   const HandleLogOut = () => {
     localStorage.removeItem("email");
@@ -27,7 +27,7 @@ function Sidebar({ setCurrPage }) {
   };
 
   return (
-    <div className="bg-white w-[300px] rounded-[10px]">
+    <div className="bg-gray-300 w-[300px] rounded-[10px]">
       <div className="flex justify-center py-10">
         <img
           className="rounded-full"
