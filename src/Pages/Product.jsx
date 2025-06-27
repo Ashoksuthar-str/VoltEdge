@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../Auth-DB/FireBase";
 import Header from "../Components/Header";
-import { getDocs, collection } from "firebase/firestore";
+import {
+  getDocs,
+  getDoc,
+  setDoc,
+  collection,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 function Product() {
@@ -26,6 +33,35 @@ function Product() {
     getProduct();
   }, []);
 
+  async function addToCart(code) {
+    const uid = localStorage.getItem("uid");
+    if (uid) {
+      const cartDocRef = doc(db, "Cart", `${uid}_${code}`);
+      const cartSnap = await getDoc(cartDocRef);
+      if (cartSnap.exists()) {
+        const currentQuantity = cartSnap.data().quantity || 0;
+        const today = new Date();
+        const currDate = today.toLocaleDateString();
+        await updateDoc(cartDocRef, {
+          quantity: currentQuantity + 1,
+          date: currDate,
+        });
+        console.log("Quantity updated by +1");
+      } else {
+        const today = new Date();
+        const currDate = today.toLocaleDateString();
+        await setDoc(cartDocRef, {
+          uid: uid,
+          code: code,
+          quantity: 1,
+          date: currDate,
+        });
+      }
+    } else {
+      alert("Please Login !");
+    }
+  }
+
   return (
     <div>
       <Header />
@@ -33,104 +69,191 @@ function Product() {
         <h1 className="text-2xl font-bold py-5 text-gray-700">
           Shop by Skill Level
         </h1>
-        <h1 className="font-bold text-gray-700">Beginner Pack</h1>
+        <h1 className="font-bold text-gray-700 pt-8">Beginner Pack</h1>
         <div className="flex overflow-x-scroll scrollbar-hide">
           {products
             .filter((product) => product.difficulty == "Beginner")
             .map((item) => (
               <div
                 key={item.id}
-                className="group bg-white min-w-[300px] max-w-[300px] m-10 rounded-md cursor-pointer shadow-[-7px_-7px_20px_rgba(0,0,0,0.6),_7px_7px_20px_rgba(255,255,255,0.3)]"
+                className="group bg-white min-w-[300px] max-w-[300px] m-5 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-shadow duration-300"
                 onClick={() => navigate(`/detail/${item.code}`)}
               >
-                <img className="overflow-hidden w-[300px]" src={item.img} />
-                <hr />
-                <div className="flex justify-between p-2">
-                  <h2 className="font-medium clamp-1">{item.name}</h2>
-                  <h2 className="px-2 bg-[rgba(100,255,100,0.2)] border-green-600 border-2 rounded-full">
+                <div className="relative h-[200px] overflow-hidden flex items-center justify-center bg-gray-50">
+                  <img
+                    className="object-contain h-full"
+                    src={item.img}
+                    alt={item.name}
+                  />
+
+                  {/* Difficulty Badge */}
+                  <span
+                    className={`absolute top-2 right-2 px-3 py-1 rounded-full text-xs font-medium
+      ${
+        item.difficulty === "Beginner"
+          ? "bg-green-100 text-green-600"
+          : item.difficulty === "Intermediate"
+          ? "bg-yellow-100 text-yellow-600"
+          : "bg-red-100 text-red-600"
+      }
+    `}
+                  >
                     {item.difficulty}
-                  </h2>
+                  </span>
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    alert("Added");
-                  }}
-                  className="absolute duration-300 opacity-0 group-hover:-translate-y-60 group-hover:opacity-100 translate-x-24.5 -translate-y-55 bg-[rgba(100,100,255,0.5)] px-3 py-2 rounded-[8px] border-2 border-blue-700"
-                >
-                  Add to Cart
-                </button>
-                <p className="clamp-2 text-[rgba(0,0,0,0.6)] px-2">
-                  {item.description}
-                </p>
+
+                <hr />
+
+                <div className="p-3">
+                  <h2 className="font-semibold group-hover:text-blue-500 text-gray-800 text-lg mb-1 line-clamp-1">
+                    {item.name}
+                  </h2>
+
+                  <p className="text-gray-600 text-sm clamp-2 mb-4">
+                    {item.description}
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <h1 className="text-blue-700 text-xl font-bold">
+                      ₹{item.price}
+                    </h1>
+                    <button
+                      className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-200"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent navigate on button click
+                        addToCart(item.code);
+                      }}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
         </div>
 
-        <h1 className="font-bold text-gray-700">Intermediate Pack</h1>
+        <h1 className="font-bold text-gray-700 pt-8">Intermediate Pack</h1>
         <div className="flex overflow-x-scroll scrollbar-hide">
           {products
             .filter((product) => product.difficulty == "Intermediate")
             .map((item) => (
               <div
                 key={item.id}
-                className="group bg-white min-w-[300px] max-w-[300px] m-10 rounded-md cursor-pointer shadow-[-7px_-7px_20px_rgba(0,0,0,0.6),_7px_7px_20px_rgba(255,255,255,0.3)]"
+                className="group bg-white min-w-[300px] max-w-[300px] m-5 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-shadow duration-300"
                 onClick={() => navigate(`/detail/${item.code}`)}
               >
-                <img className="overflow-hidden w-[300px]" src={item.img} />
-                <hr />
-                <div className="flex justify-between p-2">
-                  <h2 className="font-medium clamp-1">{item.name}</h2>
-                  <h2 className="px-2 bg-[rgba(255,255,100,0.2)] border-yellow-600 border-2 rounded-full">
+                <div className="relative h-[200px] overflow-hidden flex items-center justify-center bg-gray-50">
+                  <img
+                    className="object-contain h-full"
+                    src={item.img}
+                    alt={item.name}
+                  />
+
+                  {/* Difficulty Badge */}
+                  <span
+                    className={`absolute top-2 right-2 px-3 py-1 rounded-full text-xs font-medium
+      ${
+        item.difficulty === "Beginner"
+          ? "bg-green-100 text-green-600"
+          : item.difficulty === "Intermediate"
+          ? "bg-yellow-100 text-yellow-600"
+          : "bg-red-100 text-red-600"
+      }
+    `}
+                  >
                     {item.difficulty}
-                  </h2>
+                  </span>
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    alert("Added");
-                  }}
-                  className="absolute duration-300 opacity-0 group-hover:-translate-y-60 group-hover:opacity-100 translate-x-24.5 -translate-y-55 bg-[rgba(100,100,255,0.5)] px-3 py-2 rounded-[8px] border-2 border-blue-700"
-                >
-                  Add to Cart
-                </button>
-                <p className="clamp-2 text-[rgba(0,0,0,0.6)] px-2">
-                  {item.description}
-                </p>
+
+                <hr />
+
+                <div className="p-3">
+                  <h2 className="font-semibold group-hover:text-blue-500 text-gray-800 text-lg mb-1 line-clamp-1">
+                    {item.name}
+                  </h2>
+
+                  <p className="text-gray-600 text-sm clamp-2 mb-4">
+                    {item.description}
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <h1 className="text-blue-700 text-xl font-bold">
+                      ₹{item.price}
+                    </h1>
+                    <button
+                      className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-200"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent navigate on button click
+                        addToCart(item);
+                      }}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
         </div>
 
-        <h1 className="font-bold text-gray-700">Advanced Pack</h1>
+        <h1 className="font-bold text-gray-700 pt-8">Advanced Pack</h1>
         <div className="flex overflow-x-scroll scrollbar-hide">
           {products
             .filter((product) => product.difficulty == "Advance")
             .map((item) => (
               <div
                 key={item.id}
-                className="group bg-white min-w-[300px] max-w-[300px] m-10 rounded-md cursor-pointer shadow-[-7px_-7px_20px_rgba(0,0,0,0.6),_7px_7px_20px_rgba(255,255,255,0.3)]"
+                className="group bg-white min-w-[300px] max-w-[300px] m-5 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-shadow duration-300"
                 onClick={() => navigate(`/detail/${item.code}`)}
               >
-                <img className="overflow-hidden w-[300px]" src={item.img} />
-                <hr />
-                <div className="flex justify-between p-2">
-                  <h2 className="font-medium clamp-1">{item.name}</h2>
-                  <h2 className="px-2 bg-[rgba(255,100,100,0.2)] border-red-600 border-2 rounded-full">
+                <div className="relative h-[200px] overflow-hidden flex items-center justify-center bg-gray-50">
+                  <img
+                    className="object-contain h-full"
+                    src={item.img}
+                    alt={item.name}
+                  />
+
+                  {/* Difficulty Badge */}
+                  <span
+                    className={`absolute top-2 right-2 px-3 py-1 rounded-full text-xs font-medium
+      ${
+        item.difficulty === "Beginner"
+          ? "bg-green-100 text-green-600"
+          : item.difficulty === "Intermediate"
+          ? "bg-yellow-100 text-yellow-600"
+          : "bg-red-100 text-red-600"
+      }
+    `}
+                  >
                     {item.difficulty}
-                  </h2>
+                  </span>
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    alert("Added");
-                  }}
-                  className="absolute duration-300 opacity-0 group-hover:-translate-y-60 group-hover:opacity-100 translate-x-24.5 -translate-y-55 bg-[rgba(100,100,255,0.5)] px-3 py-2 rounded-[8px] border-2 border-blue-700"
-                >
-                  Add to Cart
-                </button>
-                <p className="clamp-2 px-2 text-[rgba(0,0,0,0.6)] ">
-                  {item.description}
-                </p>
+
+                <hr />
+
+                <div className="p-3">
+                  <h2 className="font-semibold group-hover:text-blue-500 text-gray-800 text-lg mb-1 line-clamp-1">
+                    {item.name}
+                  </h2>
+
+                  <p className="text-gray-600 text-sm clamp-2 mb-4">
+                    {item.description}
+                  </p>
+
+                  <div className="flex justify-between items-center">
+                    <h1 className="text-blue-700 text-xl font-bold">
+                      ₹{item.price}
+                    </h1>
+                    <button
+                      className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-200"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent navigate on button click
+                        addToCart(item);
+                      }}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
         </div>
