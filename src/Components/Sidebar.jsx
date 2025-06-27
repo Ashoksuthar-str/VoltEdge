@@ -1,15 +1,17 @@
 import { React, useState, useEffect } from "react";
 import { signInWithGoogle } from "../Auth-DB/FireBase";
+import { useNavigate } from "react-router-dom";
 
 function Sidebar({ setCurrPage }) {
   const [signIn, setSignIn] = useState(false);
   const [selected, setSelected] = useState("profile");
+  const navigate = useNavigate();
 
   const HandleLogOut = () => {
     localStorage.removeItem("email");
     localStorage.removeItem("profilePic");
     localStorage.removeItem("uid");
-    window.location.reload();
+    navigate("/");
   };
 
   useEffect(() => {
