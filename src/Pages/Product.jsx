@@ -10,10 +10,12 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import Notification from "../Components/Notification";
 
 function Product() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const [notification, setNotification] = useState(false);
 
   const productsRef = collection(db, "Products");
 
@@ -33,38 +35,29 @@ function Product() {
     getProduct();
   }, []);
 
-  async function addToCart(code) {
-    const uid = localStorage.getItem("uid");
-    if (uid) {
-      const cartDocRef = doc(db, "Cart", `${uid}_${code}`);
-      const cartSnap = await getDoc(cartDocRef);
-      if (cartSnap.exists()) {
-        const currentQuantity = cartSnap.data().quantity || 0;
-        const today = new Date();
-        const currDate = today.toLocaleDateString();
-        await updateDoc(cartDocRef, {
-          quantity: currentQuantity + 1,
-          date: currDate,
-        });
-        console.log("Quantity updated by +1");
-      } else {
-        const today = new Date();
-        const currDate = today.toLocaleDateString();
-        await setDoc(cartDocRef, {
-          uid: uid,
-          code: code,
-          quantity: 1,
-          date: currDate,
-        });
-      }
+  function addToCart(code) {
+    // Get existing cart from localStorage
+    const cartJSON = localStorage.getItem("cart");
+    let cart = cartJSON ? JSON.parse(cartJSON) : {};
+
+    // If product exists, increase quantity
+    if (cart[code]) {
+      cart[code].quantity += 1;
     } else {
-      alert("Please Login !");
+      // If not exists, add with quantity 1
+      cart[code] = { quantity: 1 };
     }
+
+    // Save back to localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    setNotification(true);
   }
 
   return (
     <div>
       <Header />
+      {notification && <Notification close={() => setNotification(false)} />}
       <div className="w-[90%] mx-auto">
         <h1 className="text-2xl font-bold py-5 text-gray-700">
           Shop by Skill Level
@@ -76,7 +69,7 @@ function Product() {
             .map((item) => (
               <div
                 key={item.id}
-                className="group bg-white min-w-[300px] max-w-[300px] m-5 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-shadow duration-300"
+                className="group bg-white min-w-[300px] max-w-[300px] m-5 rounded-lg cursor-pointer shadow-md hover:shadow-lg transition-shadow duration-300 "
                 onClick={() => navigate(`/detail/${item.code}`)}
               >
                 <div className="relative h-[200px] overflow-hidden flex items-center justify-center bg-gray-50">
@@ -114,7 +107,7 @@ function Product() {
                   </p>
 
                   <div className="flex justify-between items-center">
-                    <h1 className="text-blue-700 text-xl font-bold">
+                    <h1 className="text-blue-700 text-xl font-bold ">
                       ₹{item.price}
                     </h1>
                     <button
@@ -184,7 +177,7 @@ function Product() {
                       className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-200"
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent navigate on button click
-                        addToCart(item);
+                        addToCart(item.code);
                       }}
                     >
                       Add to Cart
@@ -247,7 +240,7 @@ function Product() {
                       className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-200"
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent navigate on button click
-                        addToCart(item);
+                        addToCart(item.code);
                       }}
                     >
                       Add to Cart

@@ -29,7 +29,7 @@ function Sidebar({ setCurrPage }) {
   };
 
   return (
-    <div className="bg-gray-300 w-[300px] rounded-[10px]">
+    <div className="bg-gray-300 rounded-[10px]">
       <div className="flex justify-center py-10">
         <img
           className="rounded-full"
