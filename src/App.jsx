@@ -7,7 +7,6 @@ import Tutorial from "./Pages/Tutorial";
 import ProductDetail from "./Pages/ProductDetail";
 import UploadPro from "./Pages/UploadPro";
 import CartPage from "./Pages/CartPage";
-import Notification from "./Components/Notification";
 
 function App() {
   return (
