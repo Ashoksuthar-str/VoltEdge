@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Notification from "../Components/Notification";
+import Footer from "../Components/Footer";
 
 function Product() {
   const navigate = useNavigate();
@@ -251,6 +252,7 @@ function Product() {
             ))}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
